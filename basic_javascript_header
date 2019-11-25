@@ -1,0 +1,93 @@
+<script>  
+	window.setTimeout(function() {window.focus()}, 0);
+	var handled = false,
+		reveals = document.getElementsByClassName("reveal");
+		if (reveals.length > 1) {
+			var clr = window.getComputedStyle(reveals[0]).color,
+			bg = window.getComputedStyle(reveals[0]).background,
+			holder = [];
+
+		hint = document.getElementById("hint");
+		if (hint) {hintText = hint.innerHTML;}
+		extra = document.getElementById("extra");
+		if (extra) {extraText = extra.innerHTML;}
+		if (extra || hint) {extraStep = 1;} else {extraStep = 0;}
+		for (i = 0; i < reveals.length; ++i) {holder.push(reveals[i].innerHTML);}
+			for (i = 0; i < reveals.length; ++i) {
+			//reveals[i].style.background = clr;
+				//reveals[i].style.fontWeight = "bold";
+			clozeChildren = reveals[i].getElementsByTagName("*");
+			//for (j = 1; j < clozeChildren.length; ++j) {clozeChildren[j].style.background = clr;}
+				reveals[i].innerHTML = "[|||]";
+			}
+			for (i = 0; i < reveals.length; ++i) {
+			(function(j) {
+				reveals[j].onclick = function() {
+				this.innerHTML = holder[j];
+						//this.style.fontWeight = "normal";
+				this.style.background = bg;
+				clozeChildren = this.getElementsByTagName("*");
+				for (k = 1; k < clozeChildren.length; ++k) {
+					clozeChildren[k].style.background = bg;
+				}
+				this.style.cursor = 'text';
+				}
+			})(i);
+			reveals[i].style.cursor = 'help';
+			}
+			if (hint) {
+			hint.innerHTML = 'HINT';
+			hint.onclick = function() {
+				this.innerHTML = hintText;
+			}
+			}
+			if (extra) {
+			extra.innerHTML = '<hr>[more info]';
+			extra.onclick = function() {
+				this.innerHTML = extraText;
+			}
+			}
+		
+
+
+		document.onkeypress = function(ev) {
+			if (handled) return false;
+		}
+		document.onkeydown = function() {
+			if (reveals.length > 1) {
+			for (i = 0; i < reveals.length + extraStep; ++i) {
+				if ((event.which == 32 || event.which == 37 || event.which == 38 || event.which == 39 || event.which == 40 || event.which == 13) && i < reveals.length) {
+				if (reveals[i].innerHTML == "[|||]") {
+					reveals[i].innerHTML = holder[i];
+					//reveals[i].style.fontWeight = "normal";
+					reveals[i].style.background = bg;
+					clozeChildren = reveals[i].getElementsByTagName("*");
+					for (j = 1; j < clozeChildren.length; ++j) {
+						clozeChildren[j].style.background = bg;
+					}
+					handled = true;
+					return false
+				}
+				}
+				if ((event.which == 32 || event.which == 37 || event.which == 38 || event.which == 39 || event.which == 40 || event.which == 13) && i == reveals.length) {
+				if ((extra && extra.innerHTML != extraText) || (hint && hint.innerHTML != hintText)) {
+					if (hint) {
+						hint.innerHTML = hintText;
+					}
+					if (extra) {
+						extra.innerHTML = extraText;
+					}
+					handled = true;
+					return false
+				}
+				}
+			}
+			}
+			handled = false;
+			return true;
+		}
+		window.setTimeout(function() {
+			window.focus()
+		}, 0);
+		}
+</script>
